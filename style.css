@@ -1,0 +1,52 @@
+:root { 
+    --primary: #007bff; --dark: #1c1e21; --green: #28a745; --red: #dc3545; --bg: #f4f7f6;
+    --itau: rgba(255, 133, 0, 0.08); --santander: rgba(236, 0, 0, 0.08); --scotia: rgba(0, 74, 153, 0.08);
+}
+
+body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 10px; font-size: 14px; color: #333; }
+nav { display: flex; gap: 8px; margin-bottom: 15px; }
+nav button { flex: 1; padding: 12px; border-radius: 8px; border: none; background: white; cursor: pointer; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+.resumen-footer { display: flex; justify-content: space-around; background: var(--dark); color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; position: sticky; top: 5px; z-index: 100; }
+.disponible-box { color: #5cb85c; font-weight: bold; }
+
+.contenedor-flex { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+.card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); flex: 1; min-width: 320px; box-sizing: border-box; }
+
+h3 { margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
+h4 { margin: 15px 0 8px 0; color: #666; font-size: 0.85em; text-transform: uppercase; }
+
+.dropdown-detalle { margin-top: 10px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
+.dropdown-detalle summary { padding: 12px; cursor: pointer; background: #fafafa; font-weight: bold; display: flex; justify-content: space-between; list-style: none; }
+.dropdown-detalle summary span { font-family: 'Courier New', monospace; color: var(--primary); }
+
+.banco-card { border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.03); }
+.banco-itau { background-color: var(--itau); border-left: 6px solid #ff8500; }
+.banco-santander { background-color: var(--santander); border-left: 6px solid #ec0000; }
+.banco-scotiabank { background-color: var(--scotia); border-left: 6px solid #004a99; }
+.banco-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px; }
+
+input, select { padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; width: 100%; box-sizing: border-box; }
+.btn-add { width: 100%; padding: 12px; border-radius: 6px; color: white; border: none; font-weight: bold; cursor: pointer; }
+.btn-fijo { background: #0056b3; }
+.btn-var { background: #1e7e34; }
+input[type=number] { -moz-appearance: textfield; }
+
+.lista-datos { list-style: none; padding: 0; margin: 0; }
+.lista-datos li { display: flex; justify-content: space-between; padding: 10px 15px; border-bottom: 1px solid #f9f9f9; background: white; }
+
+.item-proy-verde { color: var(--green) !important; font-weight: bold; background: #f0fff4 !important; border-left: 4px solid var(--green); }
+.item-proy-rojo { color: var(--red) !important; font-weight: bold; background: #fff5f5 !important; border-left: 4px solid var(--red); }
+
+.btn-del { background: var(--red); color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+
+.table-container { overflow-x: auto; width: 100%; background: white; border-radius: 8px; }
+table { border-collapse: collapse; min-width: 900px; width: 100%; font-size: 0.9em; }
+th, td { border: 1px solid #eee; padding: 10px; text-align: center; }
+.fila-totales { background: #fffde7; font-weight: bold; }
+.txt-red { color: var(--red); }
+.txt-green { color: var(--green); }
+.tabla-proy input { width: 90px; text-align: center; border: 1px solid #ddd; border-radius: 4px; padding: 4px; }
+
+/* Estilo para los inputs de edición rápida en la tabla */
+.input-edit-tabla { width: 80px; padding: 3px; border: 1px dashed #ccc; text-align: center; font-size: 0.95em; }

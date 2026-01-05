@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planificador Financiero</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <button onclick="showSection('inicio')">INICIO</button>
+        <button onclick="showSection('tarjetas')">TARJETAS</button>
+        <button onclick="showSection('proyecciones')">PROYECCIONES</button>
+    </nav>
+
+    <div class="resumen-footer">
+        <div class="resumen-item">Ingresos: $<span id="total-ingresos-v">0,00</span></div>
+        <div class="resumen-item">Gastos: $<span id="total-gastos-v">0,00</span></div>
+        <div class="resumen-item disponible-box">Disponible: $<span id="dinero-disponible">0,00</span></div>
+    </div>
+
+    <section id="inicio">
+        <div class="contenedor-flex">
+            <div class="card">
+                <h3>💰 Ingresos</h3>
+                <div class="config-subcard">
+                    <h4>Ingresos Fijos</h4>
+                    <input type="text" id="nuevo-ingreso-fijo-n" placeholder="Nombre">
+                    <input type="number" id="nuevo-ingreso-fijo-m" step="0.01" placeholder="Monto">
+                    <button class="btn-add btn-fijo" onclick="agregarIngresoFijo()">Añadir Ingreso Fijo</button>
+                    <details class="dropdown-detalle" open>
+                        <summary>Detalle Fijos: <span id="subtotal-ing-fijo">$0,00</span></summary>
+                        <ul id="lista-ingresos-fijos" class="lista-datos"></ul>
+                    </details>
+                </div>
+                <div class="variable-container">
+                    <h4>Ingresos Variables</h4>
+                    <input type="text" id="nombre-ingreso-var" placeholder="Nombre">
+                    <input type="number" id="monto-ingreso-var" step="0.01" placeholder="Monto">
+                    <button class="btn-add btn-var" onclick="agregarIngresoVar()">Añadir Ingreso Variable</button>
+                    <details class="dropdown-detalle" open>
+                        <summary>Detalle Variables: <span id="subtotal-ing-var">$0,00</span></summary>
+                        <ul id="lista-ingresos-var" class="lista-datos"></ul>
+                    </details>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>💸 Gastos</h3>
+                <div class="config-subcard">
+                    <h4>Gastos Fijos</h4>
+                    <input type="text" id="nuevo-fijo-nombre" placeholder="Nombre">
+                    <input type="number" id="nuevo-fijo-monto" step="0.01" placeholder="Monto">
+                    <button class="btn-add btn-fijo" onclick="agregarGastoFijo()">Añadir Gasto Fijo</button>
+                    <details class="dropdown-detalle" open>
+                        <summary>Detalle Fijos: <span id="subtotal-gas-fijo">$0,00</span></summary>
+                        <ul id="lista-gastos-fijos" class="lista-datos"></ul>
+                    </details>
+                </div>
+                <div class="variable-container">
+                    <h4>Gastos Variables</h4>
+                    <input type="text" id="nombre-gasto-var" placeholder="Nombre">
+                    <input type="number" id="monto-gasto-var" step="0.01" placeholder="Monto">
+                    <button class="btn-add btn-var" onclick="agregarGastoVar()">Añadir Gasto Variable</button>
+                    <details class="dropdown-detalle" open>
+                        <summary>Detalle Variables: <span id="subtotal-gas-var">$0,00</span></summary>
+                        <ul id="lista-gastos-var" class="lista-datos"></ul>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tarjetas" style="display:none;">
+        <div class="contenedor-flex">
+            <div class="card">
+                <h3>💳 Cargar Gasto</h3>
+                <select id="banco-tarjeta">
+                    <option value="ITAU">ITAU</option>
+                    <option value="SANTANDER">SANTANDER</option>
+                    <option value="SCOTIABANK">SCOTIABANK</option>
+                </select>
+                <input type="text" id="nombre-tarjeta" placeholder="Descripción">
+                <input type="number" id="monto-tarjeta" step="0.01" placeholder="Monto Total">
+                <input type="number" id="cuotas-tarjeta" placeholder="Cuotas">
+                <select id="delay-tarjeta">
+                    <option value="0">Cobrar este mes</option>
+                    <option value="1" selected>Cobrar mes siguiente</option>
+                </select>
+                <button class="btn-add btn-fijo" onclick="agregarTarjeta()">Cargar Cuotas</button>
+            </div>
+            <div class="card">
+                <h3>🔄 Suscripciones</h3>
+                <select id="banco-sub">
+                    <option value="ITAU">ITAU</option>
+                    <option value="SANTANDER">SANTANDER</option>
+                    <option value="SCOTIABANK">SCOTIABANK</option>
+                </select>
+                <input type="text" id="nombre-sub" placeholder="Ej: Netflix">
+                <input type="number" id="monto-sub" step="0.01" placeholder="Monto mensual">
+                <button class="btn-add btn-var" onclick="agregarSub()">Añadir Suscripción</button>
+            </div>
+        </div>
+        <div id="tablas-bancos-container"></div>
+    </section>
+
+    <section id="proyecciones" style="display:none;">
+        <div class="card">
+            <h3>📈 Proyecciones Estimadas</h3>
+            <div class="table-container">
+                <table class="tabla-proy">
+                    <thead><tr id="h-meses-p"></tr></thead>
+                    <tbody id="b-proyecciones"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <script src="script.js"></script>
+</body>
+</html>
