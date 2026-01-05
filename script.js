@@ -1,15 +1,15 @@
-// 1. CONFIGURACIÓN DE FIREBASE (PEGA TUS DATOS AQUÍ)
+// 1. CONFIGURACIÓN DE FIREBASE (COMPLETA CON TUS DATOS)
 const firebaseConfig = {
     apiKey: "TAIzaSyDdT-qJImDZ062JYlD_cN2y301M8XOkLd0",
     authDomain: "gestion-de-gastos-6e5a3.firebaseapp.com",
-    databaseURL: "https://gestion-de-gastos-6e5a3-default-rtdb.firebaseio.com/",
+    databaseURL: "https://gestion-de-gastos-6e5a3-default-rtdb.firebaseio.com/", 
     projectId: "gestion-de-gastos-6e5a3",
     storageBucket: "gestion-de-gastos-6e5a3.firebasestorage.app",
     messagingSenderId: "1048329957738",
     appId: "1:1048329957738:web:8bc4051fa30431f6813513"
 };
 
-// 2. IMPORTACIÓN DE MÓDULOS
+// 2. IMPORTACIONES DE FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -28,15 +28,12 @@ onValue(dbRef, (snapshot) => {
     const data = snapshot.val();
     if (data) {
         datos = data;
-        // Validaciones de seguridad para arreglos
         if(!Array.isArray(datos.proyIng)) datos.proyIng = Array(8).fill(0);
         if(!Array.isArray(datos.proyGas)) datos.proyGas = Array(8).fill(0);
         if(!Array.isArray(datos.proyAho)) datos.proyAho = Array(8).fill(0);
-        
         verificarMes();
         renderAll();
     } else {
-        // Si la base de datos está vacía, inicializarla
         guardar();
     }
 });
@@ -45,13 +42,12 @@ const bancos = ["ITAU", "SANTANDER", "SCOTIABANK"];
 const mesesArr = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 const listaMesesNombres = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
+// Formato de moneda: 1.234,56
 function fmt(n) {
     return (n || 0).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-function guardar() {
-    set(dbRef, datos);
-}
+function guardar() { set(dbRef, datos); }
 
 function verificarMes() {
     const actual = new Date().getMonth();
@@ -72,7 +68,7 @@ function verificarMes() {
     }
 }
 
-// 4. FUNCIONES DE CARGA (EXPUESTAS A WINDOW)
+// 4. FUNCIONES EXPORTADAS A WINDOW (PARA EL HTML)
 window.agregarIngresoFijo = () => { 
     const n=document.getElementById('nuevo-ingreso-fijo-n').value, m=parseFloat(document.getElementById('nuevo-ingreso-fijo-m').value); 
     if(n&&!isNaN(m)){ if(!datos.ingFijos) datos.ingFijos=[]; datos.ingFijos.push({nombre:n, monto:m}); refresh(['nuevo-ingreso-fijo-n','nuevo-ingreso-fijo-m']); }
@@ -103,8 +99,10 @@ window.agregarSub = () => {
     if(n&&m){ if(!datos.subs) datos.subs=[]; datos.subs.push({banco:b, nombre:n, monto:m}); refresh(['nombre-sub','monto-sub']); }
 };
 
+window.eliminarItem = (lista, idx) => { datos[lista].splice(idx,1); guardar(); };
+
 window.eliminarTarjeta = (nombre, banco) => { 
-    datos.tarjetas = datos.tarjetas.filter(t => !(t.nombre === nombre && t.banco === banco)); 
+    datos.tarjetas = (datos.tarjetas || []).filter(t => !(t.nombre === nombre && t.banco === banco)); 
     guardar(); 
 };
 
@@ -131,10 +129,12 @@ function renderAll() {
     (datos.gasFijos || []).forEach((x,i)=> { sGF+=x.monto; lGF.innerHTML+=`<li>${x.nombre} <span>$${fmt(x.monto)} <button class="btn-del" onclick="window.eliminarItem('gasFijos',${i})">x</button></span></li>`; });
     (datos.ingVar || []).forEach((x,i)=> { sIV+=x.monto; lIV.innerHTML+=`<li>${x.nombre} <span>$${fmt(x.monto)} <button class="btn-del" onclick="window.eliminarItem('ingVar',${i})">x</button></span></li>`; });
     
+    // Ingresos Proyectados en VERDE
     if(datos.proyIng?.[0]>0) lIV.innerHTML += `<li class="item-proy-verde">INGRESOS PROYECTADOS ${mesNom} <span>$${fmt(datos.proyIng[0])}</span></li>`;
 
     (datos.gasVar || []).forEach((x,i)=> { sGV+=x.monto; lGV.innerHTML+=`<li>${x.nombre} <span>$${fmt(x.monto)} <button class="btn-del" onclick="window.eliminarItem('gasVar',${i})">x</button></span></li>`; });
     
+    // Gastos, Tarjetas y Ahorro en ROJO
     if(datos.proyGas?.[0]>0) lGV.innerHTML += `<li class="item-proy-rojo">GASTOS PROYECTADOS ${mesNom} <span>$${fmt(datos.proyGas[0])}</span></li>`;
     
     (datos.tarjetas || []).forEach(t => { if(t.delay===0) sTC += t.cuota; });
@@ -156,8 +156,6 @@ function renderAll() {
     renderProyecciones();
 }
 
-window.eliminarItem = (lista, idx) => { datos[lista].splice(idx,1); guardar(); };
-
 function renderTarjetasPorBanco() {
     const container = document.getElementById('tablas-bancos-container');
     if(!container) return;
@@ -171,7 +169,7 @@ function renderTarjetasPorBanco() {
         (datos.subs || []).filter(s => s.banco === banco).forEach((s) => {
             const globalIdx = datos.subs.indexOf(s);
             filas += `<tr style="color:#2c3e50"><td><button class="btn-del" onclick="window.eliminarItem('subs',${globalIdx})">x</button> (Sub) ${s.nombre}</td>
-                <td><input type="number" class="input-edit-tabla" step="0.01" value="${s.monto.toFixed(2)}" onchange="window.editarSub(${globalIdx}, this.value)"></td>`;
+                <td><input type="number" class="input-edit-tabla" step="0.01" value="${(s.monto || 0).toFixed(2)}" onchange="window.editarSub(${globalIdx}, this.value)"></td>`;
             for(let j=0; j<8; j++) { filas += `<td>$${fmt(s.monto)}</td>`; totalesMensuales[j] += s.monto; }
             filas += '</tr>'; totalMesActual += s.monto;
         });
@@ -214,5 +212,38 @@ function renderProyecciones() {
     });
 }
 
+// 6. LÓGICA DE INTERFAZ Y SEGURIDAD
 window.updProy = (k,i,v) => { let n=parseFloat(v)||0; if(k==='ing')datos.proyIng[i]=n; if(k==='gas')datos.proyGas[i]=n; if(k==='aho')datos.proyAho[i]=n; guardar(); };
-window.showSection = (id) => { ['inicio','tarjetas','proyecciones'].forEach(s => document.getElementById(s).style.display = (s === id ? 'block' : 'none')); };
+window.showSection = (id) => { ['inicio','tarjetas','proyecciones'].forEach(s => { const el = document.getElementById(s); if(el) el.style.display = (s === id ? 'block' : 'none'); }); };
+
+window.verificarAcceso = () => {
+    const pin = document.getElementById('pass-acceso').value;
+    const PIN_CORRECTO = "72471508"; // <--- CAMBIA ESTO POR TU PIN SECRETO
+
+    if(pin === PIN_CORRECTO) {
+        document.getElementById('pantalla-login').style.display = 'none';
+        document.getElementById('contenido-app').style.display = 'block';
+        
+        // Inicializar headers y vista
+        const hP = document.getElementById('h-meses-p');
+        if (hP && hP.innerHTML === "") {
+            let d = new Date();
+            hP.innerHTML = '<th>Concepto</th>';
+            for(let i=0; i<8; i++) {
+                hP.innerHTML += `<th>${mesesArr[d.getMonth()]}</th>`;
+                d.setMonth(d.getMonth()+1);
+            }
+        }
+        renderAll();
+    } else {
+        alert("PIN incorrecto");
+        document.getElementById('pass-acceso').value = '';
+    }
+};
+
+// Acceso con tecla Enter
+document.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && document.getElementById('pantalla-login').style.display !== 'none') {
+        window.verificarAcceso();
+    }
+});
